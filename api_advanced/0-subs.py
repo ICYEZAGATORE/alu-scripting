@@ -1,32 +1,31 @@
 #!/usr/bin/python3
-"""
-Returns the number of subscribers from a subreddit
-"""
+'''
+Defines function that queries the Reddit API and returns the
+number of subscribers
+'''
 import requests
+import sys
 
 
 def number_of_subscribers(subreddit):
-    """ Set a custom header user-agent """
-    headers = {"User-Agent": "ALU-scripting API 0.1"}
-    url = "https://www.reddit.com/r/{}.json".format(subreddit)
-
-    try:
-        response = requests.get(url, headers=headers,
-                                timeout=30, allow_redirects=False)
-
-    except requests.exceptions.Timeout:
-        return "The request Timed out"
-
-    if response.status_code == 200:
-        json_data = response.json()
-        subscriber_number = (
-            json_data.get("data")
-            .get("children")[0]
-            .get("data")
-            .get("subreddit_subscribers")
-        )
-        return subscriber_number
-    elif response.status_code == 404:
-        return 0
+    '''Queries the Reddit API and returns the
+    number of subscribers
+    Return:
+        0 - if invalid subreddit is given
+    '''
+    if subreddit is None or not isinstance(subreddit, str):
+        return(0)
+    endpoint = 'https://www.reddit.com'
+    headers = {'user-agent': 'Mozilla/5.0 \
+(Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
+    info = requests.get('{}/r/{}/about.json'.format(
+            endpoint,
+            subreddit), headers=headers, allow_redirects=False)
+    if info.status_code == 200:
+        json_info = info.json()
+        return(json_info.get('data').get('subscribers'))
     else:
-        return 0
+        return(0)
+
+
+

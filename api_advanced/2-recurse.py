@@ -1,4 +1,6 @@
-mport requests
+#!/usr/bin/python3
+""" 2-recurse.py """
+import requests
 
 
 def recurse(subreddit, hot_list=[], after=None):
@@ -19,4 +21,4 @@ def recurse(subreddit, hot_list=[], after=None):
         else:
             return recurse(subreddit, hot_list, data["after"])
     elif response.status_code == 404:
-        return None/
+        return None
